@@ -1,0 +1,60 @@
+# =======================
+# Unity core temporary/cache folders (НИКОГДА не коммитим)
+# =======================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Uu]ser[Ss]ettings/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+*.stacktrace
+
+# =======================
+# IDE/OS артефакты
+# =======================
+.vs/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =======================
+# Автогенерируемые решения/проекты (Unity сам пересоберёт)
+# =======================
+*.csproj
+*.sln
+*.suo
+*.user
+*.unityproj
+*.pidb
+*.booproj
+*.svd
+*.sln.iml
+
+# =======================
+# VCS (PlasticSCM) кэш/служебные файлы
+# =======================
+.plastic/
+.PlasticSCM/
+
+# =======================
+# Билды игнорим ВЕЗДЕ...
+# =======================
+[Bb]uild/
+[Bb]uilds/
+
+# ...НО в docs/ — РАЗРЕШАЕМ всё (в т.ч. Build/Builds для GitHub Pages)
+!docs/**
+!docs/**/[Bb]uild/
+!docs/**/[Bb]uilds/
+!docs/**/[Bb]uild/**
+!docs/**/[Bb]uilds/**
+
+# =======================
+# Что оставляем в репозитории (НЕ игнорим):
+#   Assets/ — исходники, префабы, сцены, .meta (обязательно)
+#   ProjectSettings/ — настройки проекта (графика, теги, слои и т.п.)
+#   Packages/ — список пакетов (manifest.json, packages-lock.json)
+#   docs/ — WebGL-демки/меню и всё под ними
+#   (По желанию) .unitypackage — если хочешь хранить резервные пакеты в репозитории
+# =======================
