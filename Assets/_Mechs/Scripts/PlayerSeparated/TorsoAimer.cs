@@ -1,53 +1,77 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.InputSystem;
 
 public class TorsoAimer : MonoBehaviour
 {
-    // In Inspector: drag the Action Reference **Gameplay/Aim (Vector2)** here.
-    // Советы: пока не используй <Mouse>/delta — оставь JIKL и/или <Gamepad>/rightStick.
+    // Absolute aim (Vector2): right stick / JIKL в†’ Р·Р°РґР°С‘С‚ Р°Р±СЃРѕР»СЋС‚РЅРѕРµ РјРёСЂРѕРІРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ
     [Header("Input")]
-    [Tooltip("Input Action Reference: Gameplay/Aim (Vector2). Drag from your .inputactions asset.")]
+    [Tooltip("Input Action Reference: Gameplay/Aim (Vector2). Right stick or keys (e.g., JIKL).")]
     [SerializeField] private InputActionProperty aim;
 
-    // Узел башни, который должен вращаться (родитель всех визуальных частей торса/пушки).
+    // Mouse delta (Vector2): <Mouse>/delta в†’ РёРЅРєСЂРµРјРµРЅС‚Р°Р»СЊРЅРѕ РєСЂСѓС‚РёС‚ Р±Р°С€РЅСЋ РїРѕ X
+    [Tooltip("Input Action Reference: Gameplay/AimMouse (Vector2). <Mouse>/delta.")]
+    [SerializeField] private InputActionProperty aimMouse; // РЅРѕРІРѕРµ РґРµР№СЃС‚РІРёРµ РґР»СЏ РјС‹С€Рё
+
     [Header("References")]
     [Tooltip("Transform of the turret pivot (rotating upper body). Usually a child of the mech root.")]
     [SerializeField] private Transform torsoPivot;
 
     [Header("Turret Settings")]
-    [Tooltip("How fast the turret turns to the target world heading (deg/sec).")]
+    [Tooltip("How fast the turret turns toward the target world heading (deg/sec).")]
     [SerializeField] private float rotateSpeed = 360f;
 
-    [Tooltip("Dead zone for the right stick/keys.")]
+    [Tooltip("Dead zone for absolute stick/keys vector.")]
     [Range(0f, 0.5f)]
     [SerializeField] private float deadzone = 0.15f;
 
-    // Целевой МИРОВОЙ курс башни (угол Y в градусах). Мы его запоминаем и держим.
+    [Tooltip("Mouse X sensitivity in degrees per pixel (how much yaw per 1px).")]
+    [SerializeField] private float mouseYawPerPixel = 0.25f;
+
+    // Р¦РµР»РµРІРѕР№ РњРР РћР’РћР™ РєСѓСЂСЃ Р±Р°С€РЅРё (СѓРіРѕР» Y, РіСЂР°РґСѓСЃС‹), РєРѕС‚РѕСЂС‹Р№ Р±Р°С€РЅСЏ В«РґРµСЂР¶РёС‚В».
     private float _targetWorldYaw;
 
     private void Awake()
     {
-        if (!torsoPivot) torsoPivot = transform; // на случай, если забыли проставить ссылку
-        _targetWorldYaw = torsoPivot.rotation.eulerAngles.y; // стартуем с текущего мирового угла
+        if (!torsoPivot) torsoPivot = transform;
+        _targetWorldYaw = torsoPivot.rotation.eulerAngles.y;
     }
 
-    private void OnEnable() => aim.action?.Enable();
-    private void OnDisable() => aim.action?.Disable();
+    private void OnEnable()
+    {
+        aim.action?.Enable();
+        aimMouse.action?.Enable();
+    }
+
+    private void OnDisable()
+    {
+        aim.action?.Disable();
+        aimMouse.action?.Disable();
+    }
 
     private void Update()
     {
         if (!torsoPivot) return;
 
-        // Вектор прицеливания из действия: (0,1)=мировое +Z, (1,0)=мировое +X.
-        Vector2 v = aim.action != null ? aim.action.ReadValue<Vector2>() : Vector2.zero;
+        // 1) РђР±СЃРѕР»СЋС‚РЅС‹Р№ РІРІРѕРґ (РїСЂР°РІС‹Р№ СЃС‚РёРє/РєР»Р°РІРёС€Рё): Р·Р°РґР°С‘С‚ РњРР РћР’РћР™ СѓРіРѕР» РЅР°РїСЂСЏРјСѓСЋ
+        Vector2 abs = aim.action != null ? aim.action.ReadValue<Vector2>() : Vector2.zero;
+        if (abs.sqrMagnitude >= deadzone * deadzone)
+        {
+            // (0,1) вЂ” world +Z; (1,0) вЂ” world +X
+            _targetWorldYaw = Mathf.Atan2(abs.x, abs.y) * Mathf.Rad2Deg;
+        }
+        else
+        {
+            // 2) Р•СЃР»Рё Р°Р±СЃРѕР»СЋС‚РЅРѕРіРѕ РІРІРѕРґР° РЅРµС‚ вЂ” Р±РµСЂС‘Рј РјС‹С€СЊ (delta) Рё РёРЅРєСЂРµРјРµРЅС‚Р°Р»СЊРЅРѕ РґРѕР±Р°РІР»СЏРµРј yaw
+            Vector2 md = aimMouse.action != null ? aimMouse.action.ReadValue<Vector2>() : Vector2.zero;
+            if (md.sqrMagnitude > 0f)
+            {
+                _targetWorldYaw += md.x * mouseYawPerPixel;     // С‚РѕР»СЊРєРѕ РіРѕСЂРёР·РѕРЅС‚
+                // РќРѕСЂРјР°Р»РёР·СѓРµРј СѓРіРѕР», С‡С‚РѕР±С‹ РЅРµ СЂРѕСЃ Р±РµР· РєРѕРЅС†Р°
+                _targetWorldYaw = Mathf.Repeat(_targetWorldYaw, 360f);
+            }
+        }
 
-        // Если есть ввод — обновляем «цель» (мировой курс).
-        // Если ввода нет — просто держим предыдущий.
-        if (v.sqrMagnitude >= deadzone * deadzone)
-            _targetWorldYaw = Mathf.Atan2(v.x, v.y) * Mathf.Rad2Deg;
-
-        // Плавно доворачиваем башню к МИРОВОМУ углу:
-        // используем world rotation (rotation), а не localRotation — так ноги могут крутиться независимо.
+        // РџР»Р°РІРЅРѕ РґРѕРІРѕСЂР°С‡РёРІР°РµРј Р±Р°С€РЅСЋ Рє РњРР РћР’РћРњРЈ СѓРіР»Сѓ (РґРµСЂР¶РёРј РєСѓСЂСЃ, РЅРѕРіРё РјРѕРіСѓС‚ РєСЂСѓС‚РёС‚СЊСЃСЏ РЅРµР·Р°РІРёСЃРёРјРѕ)
         Quaternion desiredWorld = Quaternion.Euler(0f, _targetWorldYaw, 0f);
         torsoPivot.rotation = Quaternion.RotateTowards(torsoPivot.rotation, desiredWorld, rotateSpeed * Time.deltaTime);
     }

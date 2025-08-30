@@ -640,9 +640,22 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 120026384879644443, guid: fbed41e1da96dd7439031582131c56aa, type: 3}
+  aimMouse:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Aim Mouse
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: ff595fad-5933-4c4c-a408-af23c7e6c721
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -5518713167741089400, guid: fbed41e1da96dd7439031582131c56aa, type: 3}
   torsoPivot: {fileID: 2059758495130793898}
   rotateSpeed: 360
   deadzone: 0.15
+  mouseYawPerPixel: 0.25
 --- !u!1 &2369364166178848274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,6 +1271,7 @@ MonoBehaviour:
   moveSpeed: 6
   turnSpeed: 540
   deadzone: 0.1
+  rootRigidbody: {fileID: 2335506513580554593}
 --- !u!1 &5366440864602718078
 GameObject:
   m_ObjectHideFlags: 0

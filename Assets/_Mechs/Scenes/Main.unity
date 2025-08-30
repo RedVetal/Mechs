@@ -4865,11 +4865,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1320774595924364153, guid: 4ccc169ab3d07cf41bcb8fe8802c8774, type: 3}
   m_PrefabInstance: {fileID: 2026311019}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &2039898387 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 2335506513580554593, guid: 707d3bfe21f9aa0419d5b5396f3c093a, type: 3}
-  m_PrefabInstance: {fileID: 6729349431498803170}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2102207622
 GameObject:
   m_ObjectHideFlags: 0
@@ -5244,10 +5239,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mech
       objectReference: {fileID: 0}
-    - target: {fileID: 5947692793703610527, guid: 707d3bfe21f9aa0419d5b5396f3c093a, type: 3}
-      propertyPath: rootRigidbody
-      value: 
-      objectReference: {fileID: 2039898387}
     - target: {fileID: 8259656543052259836, guid: 707d3bfe21f9aa0419d5b5396f3c093a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
