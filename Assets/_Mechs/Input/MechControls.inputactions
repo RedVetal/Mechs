@@ -102,17 +102,6 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "6d8a5bd6-0f3d-4081-8617-0a591758b169",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "2D Vector",
                     "id": "536f1ea4-a5b3-4e15-b960-f8ce3daf01b1",
                     "path": "2DVector",
@@ -126,7 +115,7 @@
                 {
                     "name": "up",
                     "id": "b73e7e3a-8fb6-4769-a5a5-3ae4b0c57283",
-                    "path": "",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -137,7 +126,7 @@
                 {
                     "name": "down",
                     "id": "c82af47a-c487-476c-8b7f-c53ef94a6250",
-                    "path": "",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
