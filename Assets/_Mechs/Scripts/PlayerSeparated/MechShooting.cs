@@ -3,27 +3,37 @@ using UnityEngine.InputSystem;
 
 public class MechShooting : MonoBehaviour
 {
-    [Header("Input (assign from .inputactions)")]
-    public InputActionProperty fire; // Gameplay/Fire
+    // In Inspector: drag the Action Reference **Gameplay/Fire (Button)** here.
+    [Header("Input")]
+    [Tooltip("Input Action Reference: Gameplay/Fire (Button). Drag from your .inputactions asset.")]
+    [SerializeField] private InputActionProperty fire;
 
-    [Header("Refs")]
-    public Transform muzzle;            // точка вылета снаряда (child у ствола/торса)
-    public Rigidbody projectilePrefab;  // префаб с Rigidbody + Collider
+    [Header("References")]
+    [Tooltip("Spawn point at the end of the gun. Its blue Z axis must point along the firing direction.")]
+    [SerializeField] private Transform muzzle;
 
-    [Header("Tuning")]
-    public float projectileSpeed = 24f;
-    public float fireCooldown = 0.12f;
+    [Tooltip("Projectile prefab with Rigidbody + Collider. Drag from Project (not from Scene).")]
+    [SerializeField] private Rigidbody projectilePrefab;
 
-    float _cd;
+    [Header("Firing Settings")]
+    [Tooltip("Initial velocity of the projectile along Muzzle.forward (m/s).")]
+    [SerializeField] private float projectileSpeed = 24f;
 
-    void OnEnable() { var a = fire.action; if (a != null) a.Enable(); }
-    void OnDisable() { var a = fire.action; if (a != null) a.Disable(); }
+    [Tooltip("Cooldown between shots (sec). Use 0 during debugging if needed.")]
+    [Min(0f)]
+    [SerializeField] private float fireCooldown = 0.12f;
 
-    void Update()
+    private float _cd;
+
+    private void OnEnable() => fire.action?.Enable();
+    private void OnDisable() => fire.action?.Disable();
+
+    private void Update()
     {
         _cd -= Time.deltaTime;
         var a = fire.action; if (a == null) return;
 
+        // Срабатывает один раз в кадр на «нажатие»: Space / LMB / <Gamepad>/buttonSouth / On-Screen Button.
         if (_cd <= 0f && a.WasPerformedThisFrame())
         {
             Shoot();
@@ -31,10 +41,19 @@ public class MechShooting : MonoBehaviour
         }
     }
 
-    void Shoot()
+    private void Shoot()
     {
+        // Базовые проверки: должна быть точка Muzzle и префаб снаряда с Rigidbody.
         if (!muzzle || !projectilePrefab) return;
-        var rb = Instantiate(projectilePrefab, muzzle.position, muzzle.rotation);
+
+        // Создаём копию префаба в позиции/ориентации Muzzle.
+        Rigidbody rb = Instantiate(projectilePrefab, muzzle.position, muzzle.rotation);
+
+        // Придаём скорость вдоль мировой оси Z у Muzzle (т.е. по дула).
         rb.linearVelocity = muzzle.forward * projectileSpeed;
+
+        // Подсказки:
+        //  - Хотите «лазер» без падения? Выключите Use Gravity в Rigidbody префаба.
+        //  - Жизненный цикл пули (самоудаление по таймеру/столкновению) добавим позже.
     }
 }

@@ -3,49 +3,52 @@ using UnityEngine.InputSystem;
 
 public class TorsoAimer : MonoBehaviour
 {
-    [Header("Input (assign from .inputactions)")]
-    public InputActionProperty aim; // Gameplay/Aim (Vector2): JIKL и/или <Gamepad>/rightStick
+    // In Inspector: drag the Action Reference **Gameplay/Aim (Vector2)** here.
+    // —оветы: пока не используй <Mouse>/delta Ч оставь JIKL и/или <Gamepad>/rightStick.
+    [Header("Input")]
+    [Tooltip("Input Action Reference: Gameplay/Aim (Vector2). Drag from your .inputactions asset.")]
+    [SerializeField] private InputActionProperty aim;
 
-    [Header("Refs")]
-    public Transform torsoPivot; // узел башни (child от Mech)
+    // ”зел башни, который должен вращатьс€ (родитель всех визуальных частей торса/пушки).
+    [Header("References")]
+    [Tooltip("Transform of the turret pivot (rotating upper body). Usually a child of the mech root.")]
+    [SerializeField] private Transform torsoPivot;
 
-    [Header("Tuning")]
-    public float rotateSpeed = 360f;   // град/с
-    public float deadzone = 0.15f;   // мЄртва€ зона стика
+    [Header("Turret Settings")]
+    [Tooltip("How fast the turret turns to the target world heading (deg/sec).")]
+    [SerializeField] private float rotateSpeed = 360f;
 
-    // целевой ћ»–ќ¬ќ… угол башни (в градусах)
+    [Tooltip("Dead zone for the right stick/keys.")]
+    [Range(0f, 0.5f)]
+    [SerializeField] private float deadzone = 0.15f;
+
+    // ÷елевой ћ»–ќ¬ќ… курс башни (угол Y в градусах). ћы его запоминаем и держим.
     private float _targetWorldYaw;
 
-    void Awake()
+    private void Awake()
     {
-        if (!torsoPivot) torsoPivot = transform;
-        // стартуем с текущего мирового угла башни
-        _targetWorldYaw = torsoPivot.rotation.eulerAngles.y;
+        if (!torsoPivot) torsoPivot = transform; // на случай, если забыли проставить ссылку
+        _targetWorldYaw = torsoPivot.rotation.eulerAngles.y; // стартуем с текущего мирового угла
     }
 
-    void OnEnable() { var a = aim.action; if (a != null) a.Enable(); }
-    void OnDisable() { var a = aim.action; if (a != null) a.Disable(); }
+    private void OnEnable() => aim.action?.Enable();
+    private void OnDisable() => aim.action?.Disable();
 
-    void Update()
+    private void Update()
     {
         if (!torsoPivot) return;
 
-        var a = aim.action;
-        Vector2 v = (a != null) ? a.ReadValue<Vector2>() : Vector2.zero;
+        // ¬ектор прицеливани€ из действи€: (0,1)=мировое +Z, (1,0)=мировое +X.
+        Vector2 v = aim.action != null ? aim.action.ReadValue<Vector2>() : Vector2.zero;
 
-        // ≈сли пользователь двигает правый стик/клавиши Ч обновл€ем ÷≈Ћ№ (в мировых ос€х XZ)
+        // ≈сли есть ввод Ч обновл€ем Ђцельї (мировой курс).
+        // ≈сли ввода нет Ч просто держим предыдущий.
         if (v.sqrMagnitude >= deadzone * deadzone)
-        {
-            // (0,1) Ч мировое +Z, (1,0) Ч мировое +X
-            // ¬нимание: это не camera-relative, а world-relative Ч так проще и стабильно
             _targetWorldYaw = Mathf.Atan2(v.x, v.y) * Mathf.Rad2Deg;
-        }
 
-        // ѕоворачиваем башню к ћ»–ќ¬ќ… цели.
-        // ƒаже если ввода нет Ч продолжаем держать направление,
-        // компенсиру€ повороты базы.
+        // ѕлавно доворачиваем башню к ћ»–ќ¬ќћ” углу:
+        // используем world rotation (rotation), а не localRotation Ч так ноги могут крутитьс€ независимо.
         Quaternion desiredWorld = Quaternion.Euler(0f, _targetWorldYaw, 0f);
-        torsoPivot.rotation = Quaternion.RotateTowards(
-            torsoPivot.rotation, desiredWorld, rotateSpeed * Time.deltaTime);
+        torsoPivot.rotation = Quaternion.RotateTowards(torsoPivot.rotation, desiredWorld, rotateSpeed * Time.deltaTime);
     }
 }
