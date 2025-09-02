@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5107854271015656225}
   - component: {fileID: 2106009396831231134}
   - component: {fileID: 3747020822528660135}
+  - component: {fileID: 3574779930665860413}
   m_Layer: 0
   m_Name: Mechbullet
   m_TagString: Untagged
@@ -141,7 +142,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!108 &5107854271015656225
 Light:
   m_ObjectHideFlags: 0
@@ -251,6 +252,19 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &3574779930665860413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7279907847769204347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dd5d21cd09b838459f00d4247e66a91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeSeconds: 4
 --- !u!1001 &5805972753651653047
 PrefabInstance:
   m_ObjectHideFlags: 0
