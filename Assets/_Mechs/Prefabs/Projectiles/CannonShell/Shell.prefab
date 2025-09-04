@@ -17,8 +17,9 @@ GameObject:
   - component: {fileID: 2106009396831231134}
   - component: {fileID: 3747020822528660135}
   - component: {fileID: 3574779930665860413}
+  - component: {fileID: 8483565568923158673}
   m_Layer: 0
-  m_Name: Mechbullet
+  m_Name: Shell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -265,6 +266,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeSeconds: 4
+--- !u!114 &8483565568923158673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7279907847769204347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1515ac056067a5a499d0bc09319e3d54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseDamage: 60
+  radius: 4
+  impulse: 6
 --- !u!1001 &5805972753651653047
 PrefabInstance:
   m_ObjectHideFlags: 0

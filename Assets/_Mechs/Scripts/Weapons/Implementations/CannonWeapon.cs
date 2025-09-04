@@ -20,9 +20,11 @@ public class CannonWeapon : WeaponBase
     {
         if (!EnsureMuzzle() || !projectilePrefab) return;
 
-        var rb = Instantiate(projectilePrefab, muzzle.position, muzzle.rotation);
-        // прямой импульс + небольшой аплифт для дуги
+        Rigidbody rb = Instantiate(projectilePrefab, muzzle.position, muzzle.rotation);
         rb.linearVelocity = muzzle.forward * muzzleSpeed + extraUp;
-        // пуля сама уничтожается таймером/коллизией
+
+        var exp = rb.GetComponent<ProjectileExplosionDamage>();
+        if (exp != null) exp.Owner = owner;
     }
+
 }

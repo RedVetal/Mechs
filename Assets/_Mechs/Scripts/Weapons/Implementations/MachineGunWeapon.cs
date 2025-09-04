@@ -27,9 +27,13 @@ public class MachineGunWeapon : WeaponBase
 
     protected override void DoFire()
     {
-        if (!EnsureMuzzle() || !pool) return;
+        if (!EnsureMuzzle() || pool == null) return;
 
-        var rb = pool.Spawn(muzzle.position, muzzle.rotation);
+        Rigidbody rb = pool.Spawn(muzzle.position, muzzle.rotation);
         rb.linearVelocity = muzzle.forward * bulletSpeed;
+
+        var bd = rb.GetComponent<BulletDamage>();
+        if (bd != null) bd.Owner = owner;
     }
+
 }

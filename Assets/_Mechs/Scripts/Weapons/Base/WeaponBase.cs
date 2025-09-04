@@ -3,6 +3,9 @@ using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour, IWeapon
 {
+    [Header("Owner")]
+    [SerializeField] protected GameObject owner;
+
     [Header("Identity")]
     [SerializeField] private string displayName = "Weapon";
     [SerializeField] private Sprite icon;
@@ -39,7 +42,10 @@ public abstract class WeaponBase : MonoBehaviour, IWeapon
     {
         ammoInMag = Mathf.Max(1, magazineSize);
         cooldown = 0f;
+
+        if (!owner) owner = transform.root.gameObject;
     }
+
 
     public virtual void OnSelected() { }
     public virtual void OnDeselected() { }
