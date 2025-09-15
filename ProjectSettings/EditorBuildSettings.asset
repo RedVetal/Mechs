@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Tanks/Tutorial_Demo/Demo_Scenes/Demo_Game_Moon.unity
     guid: 7d48af2f9c7c14840abfc5e21827efaa
+  - enabled: 1
+    path: Assets/_Mechs/Scenes/Main.unity
+    guid: 76be816cc6028f041a44c0c71116a4da
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: fbed41e1da96dd7439031582131c56aa, type: 3}
   m_UseUCBPForAssetBundles: 0
